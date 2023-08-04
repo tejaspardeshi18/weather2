@@ -1,0 +1,124 @@
+import java.io.BufferedReader;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
+
+public class WeatherForecastProgram {
+
+    private static final String API_KEY = "b6907d289e10d714a6e88b30761fae22";
+    private static final String BASE_URL = "https://samples.openweathermap.org/data/2.5/forecast/hourly?q=London,us&appid=" + API_KEY;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int option;
+
+        do {
+            System.out.println("Choose an option:");
+            System.out.println("1. Get weather");
+            System.out.println("2. Get Wind Speed");
+            System.out.println("3. Get Pressure");
+            System.out.println("0. Exit");
+
+            option = scanner.nextInt();
+
+            switch (option) {
+                case 1:
+                    getWeather();
+                    break;
+                case 2:
+                    getWindSpeed();
+                    break;
+                case 3:
+                    getPressure();
+                    break;
+                case 0:
+                    System.out.println("Exiting program.");
+                    break;
+                default:
+                    System.out.println("Invalid option. Please choose again.");
+            }
+
+        } while (option != 0);
+
+        scanner.close();
+    }
+
+    private static void getWeather() {
+        System.out.print("Enter the date (format: yyyy-MM-dd HH:mm:ss): ");
+        String date = getInputFromUser();
+
+        String url = BASE_URL + "&dt=" + date;
+        String response = sendGetRequest(url);
+
+        // Parse the JSON response and extract the temperature for the specified date
+        // (You'll need to implement the JSON parsing logic here based on the actual API response structure)
+        // For example:
+        // double temperature = parseTemperatureFromResponse(response);
+        // System.out.println("Temperature on " + date + " : " + temperature);
+    }
+
+    private static void getWindSpeed() {
+        System.out.print("Enter the date (format: yyyy-MM-dd HH:mm:ss): ");
+        String date = getInputFromUser();
+
+        String url = BASE_URL + "&dt=" + date;
+        String response = sendGetRequest(url);
+
+        // Parse the JSON response and extract the wind speed for the specified date
+        // (You'll need to implement the JSON parsing logic here based on the actual API response structure)
+        // For example:
+        // double windSpeed = parseWindSpeedFromResponse(response);
+        // System.out.println("Wind speed on " + date + " : " + windSpeed);
+    }
+
+    private static void getPressure() {
+        System.out.print("Enter the date (format: yyyy-MM-dd HH:mm:ss): ");
+        String date = getInputFromUser();
+
+        String url = BASE_URL + "&dt=" + date;
+        String response = sendGetRequest(url);
+
+        // Parse the JSON response and extract the pressure for the specified date
+        // (You'll need to implement the JSON parsing logic here based on the actual API response structure)
+        // For example:
+        // double pressure = parsePressureFromResponse(response);
+        // System.out.println("Pressure on " + date + " : " + pressure);
+    }
+
+    private static String getInputFromUser() {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            return reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private static String sendGetRequest(String url) {
+        StringBuilder response = new StringBuilder();
+
+        try {
+            URL apiUrl = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+
+            reader.close();
+            connection.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return response.toString();
+    }
+}
